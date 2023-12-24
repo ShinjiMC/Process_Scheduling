@@ -1,3 +1,7 @@
+#ifndef READER_H
+#define READER_H
+
+#include "process.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,29 +11,20 @@
 #define MAX_PROC_ENTRIES 2048
 #define MAX_PROC_PATH_LENGTH 128
 
-struct ProcessInfo
-{
-    char name[256];
-    int pid;
-    int priority;
-    int burst_time;
-    int arrival_time;
-};
-
-void getProcessInfo(struct ProcessInfo *processes, int *count)
+int getProcesses(struct ProcessInfo *processes)
 {
     DIR *dir;
     struct dirent *entry;
     FILE *fp;
     char path[MAX_PROC_PATH_LENGTH];
-    *count = 0;
+    int count = 0;
     dir = opendir("/proc");
     if (dir == NULL)
     {
         perror("opendir");
         exit(EXIT_FAILURE);
     }
-    while ((entry = readdir(dir)) != NULL && *count < MAX_PROC_ENTRIES)
+    while ((entry = readdir(dir)) != NULL && count < MAX_PROC_ENTRIES)
     {
         if (isdigit(*entry->d_name))
         {
@@ -55,26 +50,14 @@ void getProcessInfo(struct ProcessInfo *processes, int *count)
                             sscanf(line, "se.statistics.wait_start %*s %d", &info.arrival_time);
                     }
                     fclose(fp);
-                    processes[*count] = info;
-                    (*count)++;
+                    processes[count] = info;
+                    count++;
                 }
             }
         }
     }
     closedir(dir);
+    return count;
 }
 
-int main()
-{
-    struct ProcessInfo processes[MAX_PROC_ENTRIES];
-    int count, i;
-    getProcessInfo(processes, &count);
-    printf("PID\tName\tPriority\tBurst Time\tArrival Time\n");
-    for (i = 0; i < count; i++)
-    {
-        printf("%d\t%s\t%d\t\t%d\t\t%d\n", processes[i].pid, processes[i].name,
-               processes[i].priority, processes[i].burst_time, processes[i].arrival_time);
-    }
-
-    return 0;
-}
+#endif // READER_H
