@@ -50,6 +50,7 @@ int getProcesses(struct ProcessInfo *processes)
                             sscanf(line, "se.statistics.wait_start %*s %d", &info.arrival_time);
                     }
                     fclose(fp);
+                    info.left_time = info.burst_time; // Asignar left_time igual a burst_time
                     processes[count] = info;
                     count++;
                 }

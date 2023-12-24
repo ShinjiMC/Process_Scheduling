@@ -1,5 +1,6 @@
 #include "../Components/reader.h"
 #include "../Components/fcfs.h"
+#include "../Components/sjf.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -7,29 +8,33 @@
 
 void showProcesses(struct ProcessInfo *processes, int count)
 {
-    printf("PID\tName\t\tPriority\tBurst Time\tArrival Time\n");
+    printf("PID\tName\t\tPriority\tBurst Time\tArrival Time\tLeft Time\n");
     for (int i = 0; i < count; i++)
     {
         char adjustedName[MAX_NAME_LENGTH + 1];
         strncpy(adjustedName, processes[i].name, MAX_NAME_LENGTH);
         adjustedName[MAX_NAME_LENGTH] = '\0';
-        printf("%d\t%s\t\t%d\t\t%d\t\t%d\n", processes[i].pid, adjustedName,
-               processes[i].priority, processes[i].burst_time, processes[i].arrival_time);
+        printf("%d\t%s\t\t%d\t\t%d\t\t%d\t\t%d\n", processes[i].pid, adjustedName,
+               processes[i].priority, processes[i].burst_time, processes[i].arrival_time, processes[i].left_time);
     }
 }
 
-void showFCFSResults(struct ProcessInfo *processes, int count)
+void showResults(struct ProcessInfo *processes, int count)
 {
     double total_waiting_time = 0;
     double total_response_time = 0;
 
     printf("\nFCFS Results:\n");
-    printf("PID\tBurst Time\tArrival Time\tWaiting Time\tResponse Time\n");
+    printf("PID\tName\t\tPriority\tBurst Time\tArrival Time\tWaiting Time\tResponse Time\n");
 
     for (int i = 0; i < count; i++)
     {
-        printf("%d\t%d\t\t%d\t\t%d\t\t%d\n", processes[i].pid, processes[i].burst_time,
-               processes[i].arrival_time, processes[i].waiting_time, processes[i].response_time);
+        char adjustedName[MAX_NAME_LENGTH + 1];
+        strncpy(adjustedName, processes[i].name, MAX_NAME_LENGTH);
+        adjustedName[MAX_NAME_LENGTH] = '\0';
+        printf("%d\t%s\t\t%d\t\t%d\t\t%d\t\t%d\t\t%d\n", processes[i].pid, adjustedName,
+               processes[i].priority, processes[i].burst_time, processes[i].arrival_time,
+               processes[i].waiting_time, processes[i].response_time);
 
         total_waiting_time += processes[i].waiting_time;
         total_response_time += processes[i].response_time;
@@ -47,13 +52,13 @@ int main()
     struct ProcessInfo processes[MAX_PROC_ENTRIES];
     int count;
     count = getProcesses(processes);
-    // Test data para comprobar schedule
+    //  Test data para comprobar schedule
     /*struct ProcessInfo processes[] = {
-        {"P1", 1, 0, 4, 0, 0, 0, 0},
-        {"P2", 2, 0, 6, 2, 0, 0, 0},
-        {"P3", 3, 0, 8, 6, 0, 0, 0},
-        {"P4", 4, 0, 4, 8, 0, 0, 0},
-        {"P5", 5, 0, 4, 10, 0, 0, 0},
+        {"P1", 1, 0, 5, 0, 5, 0, 0},
+        {"P2", 2, 0, 3, 1, 3, 0, 0},
+        {"P3", 3, 0, 1, 2, 1, 0, 0},
+        {"P4", 4, 0, 2, 3, 2, 0, 0},
+        {"P5", 5, 0, 3, 4, 3, 0, 0},
     };
     int count = sizeof(processes) / sizeof(processes[0]);*/
     int choice = 0;
@@ -76,11 +81,11 @@ int main()
         case 2:
             sort_by_arrival(processes, count);
             FCFS(processes, count);
-            showFCFSResults(processes, count);
+            showResults(processes, count);
             break;
         case 3:
-            // Implementar lógica para SJF
-            // ...
+            SJF(processes, count);
+            showResults(processes, count);
             break;
         case 4:
             // Implementar lógica para Round Robin
