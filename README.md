@@ -13,3 +13,9 @@ To execute with Makefile:
 make
 ./bin/main
 ```
+
+To execute with Bash:
+
+```bash
+./run.sh
+```

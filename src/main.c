@@ -1,6 +1,7 @@
 #include "../Components/reader.h"
 #include "../Components/fcfs.h"
 #include "../Components/sjf.h"
+#include "../Components/round_robin.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -49,18 +50,17 @@ void showResults(struct ProcessInfo *processes, int count)
 
 int main()
 {
-    struct ProcessInfo processes[MAX_PROC_ENTRIES];
-    int count;
-    count = getProcesses(processes);
-    //  Test data para comprobar schedule
-    /*struct ProcessInfo processes[] = {
-        {"P1", 1, 0, 5, 0, 5, 0, 0},
-        {"P2", 2, 0, 3, 1, 3, 0, 0},
-        {"P3", 3, 0, 1, 2, 1, 0, 0},
-        {"P4", 4, 0, 2, 3, 2, 0, 0},
-        {"P5", 5, 0, 3, 4, 3, 0, 0},
+    // struct ProcessInfo processes[MAX_PROC_ENTRIES];
+    // int count;
+    // count = getProcesses(processes);
+    //    Test data para comprobar schedule
+    struct ProcessInfo processes[] = {
+        {"P1", 1, 0, 3, 0, 3, 0, 0},
+        {"P2", 2, 0, 6, 2, 6, 0, 0},
+        {"P3", 3, 0, 4, 4, 4, 0, 0},
+        {"P4", 4, 0, 2, 8, 2, 0, 0},
     };
-    int count = sizeof(processes) / sizeof(processes[0]);*/
+    int count = sizeof(processes) / sizeof(processes[0]);
     int choice = 0;
     while (choice != 5)
     {
@@ -88,8 +88,9 @@ int main()
             showResults(processes, count);
             break;
         case 4:
-            // Implementar lógica para Round Robin
-            // ...
+            int quantum = 2;
+            roundRobin(processes, count, quantum);
+            showResults(processes, count);
             break;
         case 5:
             printf("Exiting...\n");
