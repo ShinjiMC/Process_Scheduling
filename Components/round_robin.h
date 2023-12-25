@@ -10,7 +10,11 @@ void roundRobin(struct ProcessInfo *processes, int count, int quantum)
     int tiempo_total = 0;
     int procesos_restantes = count;
     for (int i = 0; i < count; ++i)
+    {
+        if (processes[i].burst_time == 0)
+            procesos_restantes--;
         processes[i].left_time = processes[i].burst_time;
+    }
     struct Queue processQueue;
     initializeQueue(&processQueue);
     while (procesos_restantes > 0)

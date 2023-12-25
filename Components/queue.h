@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include "process.h"
 
-#define MAX_QUEUE_SIZE 2048
+#define MAX_QUEUE_SIZE 5000
 
 struct Queue
 {
