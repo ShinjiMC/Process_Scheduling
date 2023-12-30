@@ -1,0 +1,7 @@
+sudo apt install python3-pip
+
+pip install matplotlib numpy pandas
+
+pip install openpyxl
+
+

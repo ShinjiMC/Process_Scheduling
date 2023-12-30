@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/home/ubuntuser/Documentos/ubuntuShared/ProyectSisOperativos/Process_Scheduling/Prueba_Visual_Python/prueba.py", line 77, in <module>
+    ax.annotate('{}%'.format(round(r*100),2),
+ValueError: cannot convert float NaN to integer
