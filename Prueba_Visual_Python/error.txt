@@ -1,4 +1,13 @@
+Número de columnas en el archivo CSV: 6
+Estableciendo encabezado para columna #0: PID
+Estableciendo encabezado para columna #1: Name
 Traceback (most recent call last):
-  File "/home/ubuntuser/Documentos/ubuntuShared/ProyectSisOperativos/Process_Scheduling/Prueba_Visual_Python/prueba.py", line 77, in <module>
-    ax.annotate('{}%'.format(round(r*100),2),
-ValueError: cannot convert float NaN to integer
+  File "/home/ubuntuser/Documentos/ubuntuShared/ProyectSisOperativos/Process_Scheduling/Prueba_Visual_Python/interfaz.py", line 48, in <module>
+    show_data()
+  File "/home/ubuntuser/Documentos/ubuntuShared/ProyectSisOperativos/Process_Scheduling/Prueba_Visual_Python/interfaz.py", line 21, in show_data
+    tree.heading(f"# {idx}", text=col)
+  File "/usr/lib/python3.10/tkinter/ttk.py", line 1299, in heading
+    return _val_or_dict(self.tk, kw, self._w, 'heading', column)
+  File "/usr/lib/python3.10/tkinter/ttk.py", line 298, in _val_or_dict
+    res = tk.call(*(args + options))
+_tkinter.TclError: Column # 1 out of range
