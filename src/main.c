@@ -13,18 +13,21 @@ int main()
     struct ProcessInfo processes[MAX_PROC_ENTRIES];
     int count;
     count = getProcesses(processes);
-    //    Test data para comprobar schedule
-    /*struct ProcessInfo processes[] = {
-        {"P1", 1, 0, 3, 0, 3, 0, 0},
-        {"P2", 2, 0, 6, 2, 6, 0, 0},
-        {"P3", 3, 0, 4, 4, 4, 0, 0},
-        {"P4", 4, 0, 2, 8, 2, 0, 0},
-    };
-    int count = sizeof(processes) / sizeof(processes[0]); // hasta aqui
-*/
     int choice = 0;
     struct ExecutionOrder resultOrder;
-    while (choice != 5)
+    showProcesses(processes, count, "./static/Process.csv");
+    sort_by_arrival(processes, count);
+    resultOrder = FCFS(processes, count);
+    saveExecutionOrderToFile("./static/OrderViewFCFS.csv", &resultOrder);
+    showResults(processes, count, "./static/algorithmFCFS.csv");
+    resultOrder = SJF(processes, count);
+    saveExecutionOrderToFile("./static/OrderViewSJF.csv", &resultOrder);
+    showResults(processes, count, "./static/algorithmSJF.csv");
+    int quantum = 12;
+    resultOrder = roundRobin(processes, count, quantum);
+    saveExecutionOrderToFile("./static/OrderViewRR.csv", &resultOrder);
+    showResults(processes, count, "./static/algorithmRR.csv");
+    /*while (choice != 5)
     {
         printf("\nMenu:\n");
         printf("1. Show Processes\n");
@@ -64,7 +67,7 @@ int main()
             printf("Invalid choice. Please enter a valid option.\n");
             break;
         }
-    }
+    }*/
 
     return 0;
 }
