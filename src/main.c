@@ -2,52 +2,14 @@
 #include "../Components/fcfs.h"
 #include "../Components/sjf.h"
 #include "../Components/round_robin.h"
+#include "../Components/writer.h"
 #include <stdio.h>
 #include <stdlib.h>
-
-#define MAX_NAME_LENGTH 6
-
-void showProcesses(struct ProcessInfo *processes, int count)
-{
-    printf("PID\tName\t\tPriority\tBurst Time\tArrival Time\tLeft Time\n");
-    for (int i = 0; i < count; i++)
-    {
-        char adjustedName[MAX_NAME_LENGTH + 1];
-        strncpy(adjustedName, processes[i].name, MAX_NAME_LENGTH);
-        adjustedName[MAX_NAME_LENGTH] = '\0';
-        printf("%d\t%s\t\t%d\t\t%d\t\t%d\t\t%d\n", processes[i].pid, adjustedName,
-               processes[i].priority, processes[i].burst_time, processes[i].arrival_time, processes[i].left_time);
-    }
-}
-
-void showResults(struct ProcessInfo *processes, int count)
-{
-    double total_waiting_time = 0;
-    double total_response_time = 0;
-    printf("PID\tName\t\tPriority\tBurst Time\tArrival Time\tWaiting Time\tResponse Time\n");
-
-    for (int i = 0; i < count; i++)
-    {
-        char adjustedName[MAX_NAME_LENGTH + 1];
-        strncpy(adjustedName, processes[i].name, MAX_NAME_LENGTH);
-        adjustedName[MAX_NAME_LENGTH] = '\0';
-        printf("%d\t%s\t\t%d\t\t%d\t\t%d\t\t%d\t\t%d\n", processes[i].pid, adjustedName,
-               processes[i].priority, processes[i].burst_time, processes[i].arrival_time,
-               processes[i].waiting_time, processes[i].response_time);
-
-        total_waiting_time += processes[i].waiting_time;
-        total_response_time += processes[i].response_time;
-    }
-
-    double avg_waiting_time = total_waiting_time / count;
-    double avg_response_time = total_response_time / count;
-
-    printf("\nAverage Waiting Time: %.2lf\n", avg_waiting_time);
-    printf("Average Response Time: %.2lf\n", avg_response_time);
-}
+#include <string.h>
 
 int main()
 {
+    createResultsFolder();
     struct ProcessInfo processes[MAX_PROC_ENTRIES];
     int count;
     count = getProcesses(processes);
@@ -58,8 +20,10 @@ int main()
         {"P3", 3, 0, 4, 4, 4, 0, 0},
         {"P4", 4, 0, 2, 8, 2, 0, 0},
     };
-    int count = sizeof(processes) / sizeof(processes[0]);*/
+    int count = sizeof(processes) / sizeof(processes[0]); // hasta aqui
+*/
     int choice = 0;
+    struct ExecutionOrder resultOrder;
     while (choice != 5)
     {
         printf("\nMenu:\n");
@@ -74,21 +38,24 @@ int main()
         switch (choice)
         {
         case 1:
-            showProcesses(processes, count);
+            showProcesses(processes, count, "./static/Process.csv");
             break;
         case 2:
             sort_by_arrival(processes, count);
-            FCFS(processes, count);
-            showResults(processes, count);
+            resultOrder = FCFS(processes, count);
+            saveExecutionOrderToFile("./static/OrderView.csv", &resultOrder);
+            showResults(processes, count, "./static/algorithm.csv");
             break;
         case 3:
-            SJF(processes, count);
-            showResults(processes, count);
+            resultOrder = SJF(processes, count);
+            saveExecutionOrderToFile("./static/OrderView.csv", &resultOrder);
+            showResults(processes, count, "./static/algorithm.csv");
             break;
         case 4:
             int quantum = 12;
-            roundRobin(processes, count, quantum);
-            showResults(processes, count);
+            resultOrder = roundRobin(processes, count, quantum);
+            saveExecutionOrderToFile("./static/OrderView.csv", &resultOrder);
+            showResults(processes, count, "./static/algorithm.csv");
             break;
         case 5:
             printf("Exiting...\n");

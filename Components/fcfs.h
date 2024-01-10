@@ -2,6 +2,7 @@
 #define FCFS_H
 
 #include "process.h"
+#include "execution.h"
 
 void sort_by_arrival(struct ProcessInfo *lista_procesos, int n)
 {
@@ -19,8 +20,10 @@ void sort_by_arrival(struct ProcessInfo *lista_procesos, int n)
     }
 }
 
-void FCFS(struct ProcessInfo *lista_procesos, int n)
+struct ExecutionOrder FCFS(struct ProcessInfo *lista_procesos, int n)
 {
+    struct ExecutionOrder executionOrder;
+    initExecutionList(&executionOrder);
     int w = 0;
     if (lista_procesos[0].arrival_time == 0)
         lista_procesos[0].waiting_time = 0;
@@ -30,6 +33,7 @@ void FCFS(struct ProcessInfo *lista_procesos, int n)
         w = lista_procesos[0].arrival_time;
     }
     lista_procesos[0].response_time = lista_procesos[0].burst_time;
+    insertExecution(&executionOrder, lista_procesos[0].pid, lista_procesos[0].name, lista_procesos[0].burst_time);
     for (int i = 1; i < n; i++)
     {
         int waiting = w;
@@ -43,7 +47,9 @@ void FCFS(struct ProcessInfo *lista_procesos, int n)
             lista_procesos[i].waiting_time = 0;
         }
         lista_procesos[i].response_time = lista_procesos[i].burst_time + lista_procesos[i].waiting_time;
+        insertExecution(&executionOrder, lista_procesos[i].pid, lista_procesos[i].name, lista_procesos[i].burst_time);
     }
+    return executionOrder;
 }
 
 #endif // FCFS_H

@@ -1,22 +1,12 @@
 #!/bin/bash
 
-# Crear entorno virtual myenv
-python3 -m venv myenv
+# Ejecuta el comando make para compilar
+make
 
-# Activar entorno virtual y instalar matplotlib
-source myenv/bin/activate
-pip install matplotlib
-
-# Ejecutar Makefile
-if make; then
-    # Ejecutar el programa generado (main)
+# Comprueba si la compilación fue exitosa antes de ejecutar el programa
+if [ $? -eq 0 ]; then
+    # Ejecuta el programa generado (main)
     ./bin/main
 else
     echo "Error al compilar. Por favor, revisa los errores."
 fi
-
-# Ejecutar graph.py con el entorno virtual activado
-python graph.py
-
-# Desactivar entorno virtual
-deactivate

@@ -4,9 +4,12 @@
 #include <stdlib.h>
 #include "process.h"
 #include "queue.h"
+#include "execution.h"
 
-void roundRobin(struct ProcessInfo *processes, int count, int quantum)
+struct ExecutionOrder roundRobin(struct ProcessInfo *processes, int count, int quantum)
 {
+    struct ExecutionOrder executionOrder;
+    initExecutionList(&executionOrder);
     int tiempo_total = 0;
     int procesos_restantes = count;
     for (int i = 0; i < count; ++i)
@@ -31,6 +34,7 @@ void roundRobin(struct ProcessInfo *processes, int count, int quantum)
         {
             struct ProcessInfo currentProcess = dequeue(&processQueue);
             // printf("Processing process %d\n", currentProcess.pid);
+            int execTime = quantum;
             if (currentProcess.left_time > quantum)
             {
                 tiempo_total += quantum;
@@ -49,6 +53,7 @@ void roundRobin(struct ProcessInfo *processes, int count, int quantum)
             }
             else
             {
+                execTime = currentProcess.left_time;
                 tiempo_total += currentProcess.left_time;
                 currentProcess.left_time = 0;
                 procesos_restantes--;
@@ -63,12 +68,14 @@ void roundRobin(struct ProcessInfo *processes, int count, int quantum)
                     }
                 }
             }
+            insertExecution(&executionOrder, currentProcess.pid, currentProcess.name, execTime);
         }
         else
         {
             tiempo_total++;
         }
     }
+    return executionOrder;
 }
 
 #endif // ROUND_ROBIN_H
